@@ -55,9 +55,9 @@ function displayCars(cars) {
           <div class="carDetails">
             <h3>${car.Brand || "Unknown"} ${car.Model || "Car"}</h3>
             <p>Year: ${car.Year || "N/A"}</p>
-            <p>Power: ${car.Power || "N/A"} HP</p>
+            <p>Power: ${car.Power || "N/A"}</p>
             <p>Mileage: ${car.Mileage || "N/A"} km</p>
-            <button class="selectCarBtn">Select</button> <!-- Add a button to select the car -->
+            <button class="selectCarBtn">Select</button>
           </div>
           <img src="${
             car.Picture
