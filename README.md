@@ -7,7 +7,7 @@ Login API: https://github.com/mariuszlis/login_api
 
 DB API: https://github.com/mariuszlis/db_api
 
-Login and DB access API's has been hosted on onrender.com connected to git reposiories.
+Login and DB access API's has been hosted on render.com connected to git reposiories.
 
 DB hosting: seenode.com.
 
