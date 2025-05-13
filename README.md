@@ -15,9 +15,9 @@ All assets has been generated with a use of AI WEB tools and stored within MySQL
 After retrievieng them from API I'm using free placeholder for pictures: https://via.placeholder.com.
 
 Used technologies:
+- JavaScript
 - HTML
 - SCSS
-- JavaScript
 
 Tools:
 - Webpack (all aseetes, js, css file names has been hashed)
