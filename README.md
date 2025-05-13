@@ -2,10 +2,13 @@
 # JS Project
 
 Main repository: https://github.com/mariuszlis/car_reservation
+
 Login API: https://github.com/mariuszlis/login_api
+
 DB API: https://github.com/mariuszlis/db_api
 
-Login and DB access API's has been hosted on onrender.com connected to git reposiory.
+Login and DB access API's has been hosted on onrender.com connected to git reposiories.
+
 DB hosting: seenode.com.
 
 All assets has been generated with a use of AI WEB tools and stored within MySQL DB with base64 format.
