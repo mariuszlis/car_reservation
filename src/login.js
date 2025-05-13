@@ -4,7 +4,6 @@ import style from "./scss/login.scss";
 const $loginBtn = document.getElementById("login");
 const $password = document.getElementById("password");
 const $userName = document.getElementById("username");
-const $togglePassword = document.getElementById("togglePassword");
 
 if (localStorage.getItem("token") === "123123") {
   window.location.href = "mainscreen.html";
@@ -20,7 +19,7 @@ function tryToLogin() {
     method: "POST",
     mode: "cors", // CORS set on API side
     headers: {
-      "Content-Type": "application/json", // Required with CORS mode
+      "Content-Type": "application/json", // Required with CORS mode to POST
     },
     body: JSON.stringify({
       name: $userName.value,
@@ -42,9 +41,9 @@ function tryToLogin() {
 $userName.addEventListener("keydown", handleEnter);
 $password.addEventListener("keydown", handleEnter);
 $loginBtn.addEventListener("click", tryToLogin);
-$togglePassword.addEventListener("mouseover", () => {
+$password.addEventListener("mouseover", () => {
   $password.type = "text";
 });
-$togglePassword.addEventListener("mouseout", () => {
+$password.addEventListener("mouseout", () => {
   $password.type = "password";
 });

@@ -1,15 +1,81 @@
 .mainScreen {
   height: 100vh;
   width: 100%;
+  color: deepskyblue;
+  font-size: 20px;
   position: relative;
 
   .dataContainer {
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
   }
+
+  .carContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: transparent;
+    box-shadow: 0 4px 8px ;
+  }
+
+  .carImage {
+    width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin-left: 16px;
+  }
+
+  .carDetails {
+    flex: 1;
+    text-align: left;
+  }
+  .carContainer h3 {
+    margin: 8px 0;
+    font-size: 18px;
+    color: deepskyblue;
+  }
+
+  .carContainer p {
+    margin: 4px 0;
+    color: aliceblue;
+  }
+}
+
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdownContainer p {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+}
+
+#carTypeDropdown {
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  color: deepskyblue;
+  background-color: transparent;
+  border: none;
+  padding: 8px 16px;
+}
+
+#carTypeDropdown:focus {
+  outline: none;
+}
+#logout {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

@@ -1,1 +1,0 @@
-(()=>{"use strict";"123123"!==localStorage.getItem("token")&&(window.location.href="index.html"),document.getElementById("logout").addEventListener("click",(function(){localStorage.setItem("token",""),window.location.href="index.html"}))})();

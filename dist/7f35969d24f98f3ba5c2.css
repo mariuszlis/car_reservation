@@ -1,0 +1,143 @@
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss ***!
+  \*************************************************************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Tinos&display=swap);
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss (1) ***!
+  \*****************************************************************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Special+Elite&display=swap);
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss (2) ***!
+  \*****************************************************************************************************************************************************************************************/
+body {
+  font-family: "Tinos", serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-image: url(assets/img/background.jpg);
+  color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.logo {
+  width: 250px;
+}
+
+.inputContainer {
+  color: white;
+  display: flex;
+  font-size: 18px;
+  gap: 18px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.inputContainer input {
+  font-family: "Tinos", serif;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid white;
+  color: white;
+}
+
+.btn {
+  font-family: "Special Elite", system-ui;
+  font-size: 17px;
+  height: 30px;
+  width: 140px;
+  background: none;
+  background-color: deepskyblue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px 10px 16px;
+  transition: background-color 0.3s ease;
+}
+.btn:hover {
+  background-color: royalblue;
+}
+
+.hidden {
+  display: none;
+}
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/mainScreen.scss ***!
+  \*****************************************************************************************************************************************************************************************/
+.mainScreen {
+  height: 100vh;
+  width: 100%;
+  color: deepskyblue;
+  font-size: 20px;
+  position: relative;
+}
+.mainScreen .dataContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+}
+.mainScreen .carContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: transparent;
+  box-shadow: 0 4px 8px;
+}
+.mainScreen .carImage {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+  margin-left: 16px;
+}
+.mainScreen .carDetails {
+  flex: 1;
+  text-align: left;
+}
+.mainScreen .carContainer h3 {
+  margin: 8px 0;
+  font-size: 18px;
+  color: deepskyblue;
+}
+.mainScreen .carContainer p {
+  margin: 4px 0;
+  color: aliceblue;
+}
+
+.dropdownContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdownContainer p {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+}
+
+#carTypeDropdown {
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  color: deepskyblue;
+  background-color: transparent;
+  border: none;
+  padding: 8px 16px;
+}
+
+#carTypeDropdown:focus {
+  outline: none;
+}
+
+#logout {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}

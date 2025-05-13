@@ -1,0 +1,87 @@
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss ***!
+  \*************************************************************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Tinos&display=swap);
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss (1) ***!
+  \*****************************************************************************************************************************************************************************************/
+@import url(https://fonts.googleapis.com/css2?family=Special+Elite&display=swap);
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/global.scss (2) ***!
+  \*****************************************************************************************************************************************************************************************/
+body {
+  font-family: "Tinos", serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-image: url(assets/img/background.jpg);
+  color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.logo {
+  width: 250px;
+}
+
+.inputContainer {
+  color: white;
+  display: flex;
+  font-size: 18px;
+  gap: 18px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.inputContainer input {
+  font-family: "Tinos", serif;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid white;
+  color: white;
+}
+
+.btn {
+  font-family: "Special Elite", system-ui;
+  font-size: 17px;
+  height: 30px;
+  width: 140px;
+  background: none;
+  background-color: deepskyblue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px 10px 16px;
+  transition: background-color 0.3s ease;
+}
+.btn:hover {
+  background-color: royalblue;
+}
+
+.hidden {
+  display: none;
+}
+/*!************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scss/login.scss ***!
+  \************************************************************************************************************************************************************************************/
+.loginScreen {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+.loginScreen .loginContainer {
+  position: absolute;
+  z-index: 1;
+  left: 20%;
+  top: 20%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+#togglePassword {
+  background: none;
+  border: 0.5px solid rgba(255, 255, 255, 0.318);
+  color: grey;
+  cursor: pointer;
+}
