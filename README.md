@@ -3,9 +3,9 @@
 
 Main repository: https://github.com/mariuszlis/car_reservation
 
-Login API: https://github.com/mariuszlis/login_api
+Login API: https://github.com/mariuszlis/login_api (Private repository)
 
-DB API: https://github.com/mariuszlis/db_api
+DB API: https://github.com/mariuszlis/db_api (Private repository)
 
 Login and DB access API's has been hosted on render.com connected to git reposiories.
 
