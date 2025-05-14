@@ -16,6 +16,7 @@ After retrievieng them from API I'm using free placeholder for pictures: https:/
 
 Used technologies:
 - JavaScript
+- Node.js
 - HTML
 - SCSS
 
