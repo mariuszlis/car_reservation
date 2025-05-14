@@ -51,7 +51,7 @@ accessoryCheckboxes.forEach((checkbox) => {
       const car = JSON.parse(savedCar);
       updatePrice(car.Price || 0, car.Currency || "");
     }
-    saveFormData(); // Save updated accessories to localStorage
+    saveFormData();
   });
 });
 
@@ -134,6 +134,7 @@ function selectCar(car) {
     $formDiv.style.display = "block";
     saveVisibilityState();
     setDefaultDeliveryDate();
+    saveFormData();
 
     let basePrice = car.Price || 0;
     $selectedCarDetails.innerHTML = `
