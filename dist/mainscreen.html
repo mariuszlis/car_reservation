@@ -1,4 +1,93 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex"/><meta name="googlebot" content="noindex"/><title>Main Screen</title><script defer="defer" src="cffabab9457ef7ff4069.js"></script><link href="63f62592959e734207a9.css" rel="stylesheet"></head><body><section class="mainScreen"><button id="logout" class="btn">Logout</button><div id="cars"><p id="choose">Choose your car type: <select id="carTypeDropdown"><option value="X"></option><option value="T">Transit</option><option value="P">Personal</option></select></p><div class="dataContainer"></div></div><div id="form" style="display: none"><div id="selectedCarDetails" style="margin-bottom: 20px"><img id="carImage" alt="Selected Car" style="width: 100%;
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <meta name="googlebot" content="noindex" />
+    <title>Main Screen</title>
+  <script defer src="c61d8f3e7a7f5c4b37ee.js"></script><link href="d424a86973bf2ed8307c.css" rel="stylesheet"></head>
+  <body>
+    <section class="mainScreen">
+      <button id="logout" class="btn">Logout</button>
+      <div id="cars">
+        <p id="choose">
+          Choose your car type:
+          <select id="carTypeDropdown">
+            <option value="X"></option>
+            <option value="T">Transit</option>
+            <option value="P">Personal</option>
+          </select>
+        </p>
+        <div class="dataContainer">
+          <!-- Cars will be visible here -->
+        </div>
+      </div>
+      <div id="form" style="display: none">
+        <div id="selectedCarDetails" style="margin-bottom: 20px">
+          <!-- Selected car details and picture will be displayed here -->
+          <img
+            id="carImage"
+            alt="Selected Car"
+            style="
+              width: 100%;
               max-width: 300px;
               border-radius: 8px;
-              margin-bottom: 15px;"/></div><form id="deliveryForm"><label for="fullName">Full Name:</label> <input id="fullName" name="fullName" required/> <label for="deliveryPlace">Delivery Place:</label> <input id="deliveryPlace" name="deliveryPlace" required/> <label for="deliveryDate">Delivery Date:</label> <input type="date" id="deliveryDate" name="deliveryDate" required/><fieldset><legend>Payment Method:</legend><label><input type="radio" name="paymentMethod" value="Leasing" required/> Leasing</label> <label><input type="radio" name="paymentMethod" value="Cash" required/> Cash</label></fieldset><fieldset><legend>Accessories:</legend><label><input type="checkbox" name="accessories" value="Additional Guarantee"/> Additional Guarantee</label> <label><input type="checkbox" name="accessories" value="Winter Tires"/> Winter Tires</label></fieldset><div class="button-container"><button type="button">Back</button> <button type="submit">Submit</button></div></form></div><div id="confirm" style="display: none"><div></div></div></section></body></html>
+              margin-bottom: 15px;
+            "
+          />
+        </div>
+        <form id="deliveryForm">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" required />
+
+          <label for="deliveryPlace">Delivery Place:</label>
+          <input type="text" id="deliveryPlace" name="deliveryPlace" required />
+          <label for="deliveryDate">Delivery Date:</label>
+          <input type="date" id="deliveryDate" name="deliveryDate" required />
+
+          <fieldset>
+            <legend>Payment Method:</legend>
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Leasing"
+                required
+              />
+              Leasing
+            </label>
+            <label>
+              <input type="radio" name="paymentMethod" value="Cash" required />
+              Cash
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Accessories:</legend>
+            <label>
+              <input
+                type="checkbox"
+                name="accessories"
+                value="Additional Guarantee"
+              />
+              Additional Guarantee
+            </label>
+            <label>
+              <input type="checkbox" name="accessories" value="Winter Tires" />
+              Winter Tires
+            </label>
+          </fieldset>
+
+          <div class="button-container">
+            <button type="button">Back</button>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+      <div id="confirm" style="display: none">
+        <div></div>
+      </div>
+    </section>
+  </body>
+</html>
