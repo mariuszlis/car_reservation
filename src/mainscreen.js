@@ -8,6 +8,68 @@ if (localStorage.getItem("token") !== "123123") {
 const $logoutBtn = document.getElementById("logout");
 const $dataContainer = document.querySelector(".dataContainer");
 const $dropdown = document.getElementById("carTypeDropdown");
+const $carsDiv = document.getElementById("cars");
+const $formDiv = document.getElementById("form");
+const $confirmDiv = document.getElementById("confirm");
+const $selectedCarDetails = document.getElementById("selectedCarDetails");
+const $backButton = document.querySelector(
+  '#deliveryForm button[type="button"]'
+);
+const $submitButton = document.querySelector(
+  '#deliveryForm button[type="submit"]'
+);
+const $mainScreen = document.querySelector(".mainScreen");
+
+window.addEventListener("load", () => {
+  loadVisibilityState();
+  loadSelectedCar();
+  loadFormData();
+});
+
+document.getElementById("fullName").addEventListener("input", saveFormData);
+document
+  .getElementById("deliveryPlace")
+  .addEventListener("input", saveFormData);
+document
+  .getElementById("deliveryDate")
+  .addEventListener("change", saveFormData);
+
+const paymentMethodInputs = document.querySelectorAll(
+  'input[name="paymentMethod"]'
+);
+paymentMethodInputs.forEach((input) => {
+  input.addEventListener("change", saveFormData);
+});
+
+const accessoryCheckboxes = document.querySelectorAll(
+  'input[name="accessories"]'
+);
+accessoryCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener("change", () => {
+    const savedCar = localStorage.getItem("selectedCar");
+    if (savedCar) {
+      const car = JSON.parse(savedCar);
+      updatePrice(car.Price || 0, car.Currency || "");
+    }
+    saveFormData(); // Save updated accessories to localStorage
+  });
+});
+
+function saveVisibilityState() {
+  const formState = $formDiv.style.display || "none";
+  const carsState = $carsDiv.style.display || "block";
+
+  localStorage.setItem("formState", formState);
+  localStorage.setItem("carsState", carsState);
+}
+
+function loadVisibilityState() {
+  const formState = localStorage.getItem("formState") || "none";
+  const carsState = localStorage.getItem("carsState") || "block";
+
+  $formDiv.style.display = formState;
+  $carsDiv.style.display = carsState;
+}
 
 function fetchAndDisplayCars(type) {
   fetch(`https://db-api-0s2o.onrender.com/cars?type=${type}`, {
@@ -30,22 +92,6 @@ function fetchAndDisplayCars(type) {
     });
 }
 
-$dropdown.addEventListener("change", (event) => {
-  const selectedType = event.target.value;
-
-  if (selectedType === "X") {
-    $dataContainer.innerHTML = "";
-    return;
-  }
-
-  fetchAndDisplayCars(selectedType);
-});
-
-$logoutBtn.addEventListener("click", () => {
-  localStorage.setItem("token", "");
-  window.location.href = "index.html";
-});
-
 function displayCars(cars) {
   cars.forEach((car) => {
     const carContainer = document.createElement("div");
@@ -53,10 +99,11 @@ function displayCars(cars) {
 
     carContainer.innerHTML = `
           <div class="carDetails">
-            <h3>${car.Brand || "Unknown"} ${car.Model || "Car"}</h3>
-            <p>Year: ${car.Year || "N/A"}</p>
-            <p>Power: ${car.Power || "N/A"}</p>
-            <p>Mileage: ${car.Mileage || "N/A"} km</p>
+            <h3>${car.Brand} ${car.Model}</h3>
+            <p>Year: ${car.Year}</p>
+            <p>Power: ${car.Power}</p>
+            <p>Mileage: ${car.Mileage} km</p>
+            <p>Price: ${car.Price} ${car.Currency}</p>
             <button class="selectCarBtn">Select</button>
           </div>
           <img src="${
@@ -81,8 +128,267 @@ function selectCar(car) {
     `Please approve Your choice: ${car.Brand} ${car.Model}?`
   );
   if (isConfirmed) {
+    localStorage.setItem("selectedCar", JSON.stringify(car));
+
+    $carsDiv.style.display = "none";
+    $formDiv.style.display = "block";
+    saveVisibilityState();
+    setDefaultDeliveryDate();
+
+    let basePrice = car.Price || 0;
+    $selectedCarDetails.innerHTML = `
+      <p><strong>${car.Brand} ${car.Model} ${car.Year}</strong></p>
+      <p id="carPrice">Total Price: ${basePrice} ${car.Currency}</p>
+    `;
+
     console.log("Car selected:", car);
   } else {
     console.log("Car selection canceled.");
   }
 }
+
+function setDefaultDeliveryDate() {
+  const deliveryDateInput = document.getElementById("deliveryDate");
+  if (deliveryDateInput) {
+    const today = new Date();
+    const defaultDate = new Date(today);
+    defaultDate.setDate(today.getDate() + 14);
+
+    const year = defaultDate.getFullYear();
+    const month = String(defaultDate.getMonth() + 1).padStart(2, "0");
+    const day = String(defaultDate.getDate()).padStart(2, "0");
+
+    deliveryDateInput.value = `${year}-${month}-${day}`;
+  }
+}
+
+function updatePrice(basePrice, currency) {
+  basePrice = Number(basePrice);
+
+  const selectedAccessories = Array.from(
+    document.querySelectorAll('input[name="accessories"]:checked')
+  );
+
+  const accessoryPrices = {
+    "Additional Guarantee": 4000,
+    "Winter Tires": 1200,
+  };
+
+  let totalPrice = basePrice;
+  selectedAccessories.forEach((checkbox) => {
+    totalPrice += Number(accessoryPrices[checkbox.value]);
+  });
+
+  const $carPrice = document.getElementById("carPrice");
+  $carPrice.textContent = `Total Price: ${totalPrice.toFixed(2)} ${currency}`;
+
+  const savedFormData = JSON.parse(localStorage.getItem("formData")) || {};
+  savedFormData.totalPrice = totalPrice.toFixed(2);
+  localStorage.setItem("formData", JSON.stringify(savedFormData));
+}
+
+function validateFullName(fullName) {
+  const fullNameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
+  return fullNameRegex.test(fullName);
+}
+
+function saveFormData() {
+  const fullNameInput = document.getElementById("fullName").value.trim();
+  const deliveryPlaceInput = document
+    .getElementById("deliveryPlace")
+    .value.trim();
+  const deliveryDateInput = document.getElementById("deliveryDate").value;
+
+  const selectedAccessories = Array.from(
+    document.querySelectorAll('input[name="accessories"]:checked')
+  ).map((checkbox) => checkbox.value);
+
+  const savedFormData = JSON.parse(localStorage.getItem("formData")) || {};
+  savedFormData.fullName = fullNameInput;
+  savedFormData.deliveryPlace = deliveryPlaceInput;
+  savedFormData.deliveryDate = deliveryDateInput;
+  savedFormData.paymentMethod = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  )
+    ? document.querySelector('input[name="paymentMethod"]:checked').value
+    : null;
+  savedFormData.accessories = selectedAccessories;
+
+  localStorage.setItem("formData", JSON.stringify(savedFormData));
+}
+
+function loadFormData() {
+  const savedFormData = localStorage.getItem("formData");
+  if (savedFormData) {
+    const {
+      fullName,
+      deliveryPlace,
+      deliveryDate,
+      paymentMethod,
+      accessories,
+      totalPrice,
+    } = JSON.parse(savedFormData);
+
+    document.getElementById("fullName").value = fullName || "";
+    document.getElementById("deliveryPlace").value = deliveryPlace || "";
+    document.getElementById("deliveryDate").value = deliveryDate || "";
+
+    if (!deliveryDate) {
+      setDefaultDeliveryDate();
+    }
+
+    if (paymentMethod) {
+      const paymentMethodInput = document.querySelector(
+        `input[name="paymentMethod"][value="${paymentMethod}"]`
+      );
+      if (paymentMethodInput) {
+        paymentMethodInput.checked = true;
+      }
+    }
+
+    if (accessories && accessories.length > 0) {
+      const accessoryCheckboxes = document.querySelectorAll(
+        'input[name="accessories"]'
+      );
+      accessoryCheckboxes.forEach((checkbox) => {
+        if (accessories.includes(checkbox.value)) {
+          checkbox.checked = true;
+        }
+      });
+    }
+
+    if (totalPrice) {
+      const $carPrice = document.getElementById("carPrice");
+      if ($carPrice) {
+        $carPrice.textContent = `Total Price: ${totalPrice}`;
+      }
+    }
+  }
+}
+
+function loadSelectedCar() {
+  const savedCar = localStorage.getItem("selectedCar");
+  if (savedCar) {
+    const car = JSON.parse(savedCar);
+    let basePrice = car.Price || 0;
+    $selectedCarDetails.innerHTML = `
+      <p><strong>${car.Brand} ${car.Model} ${car.Year}</strong></p>
+      <p id="carPrice">Total Price: ${basePrice} ${car.Currency || ""}</p>
+    `;
+    console.log("Loaded selected car:", car);
+  }
+}
+
+$dropdown.addEventListener("change", (event) => {
+  const selectedType = event.target.value;
+
+  if (selectedType === "X") {
+    $dataContainer.innerHTML = "";
+    return;
+  }
+
+  fetchAndDisplayCars(selectedType);
+});
+
+$backButton.addEventListener("click", () => {
+  document.getElementById("fullName").value = "";
+  document.getElementById("deliveryPlace").value = "";
+  const paymentMethodInputs = document.querySelectorAll(
+    'input[name="paymentMethod"]'
+  );
+  paymentMethodInputs.forEach((input) => {
+    input.checked = false;
+  });
+  const accessoryCheckboxes = document.querySelectorAll(
+    'input[name="accessories"]'
+  );
+  accessoryCheckboxes.forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+
+  localStorage.removeItem("formData");
+
+  $formDiv.style.display = "none";
+  $carsDiv.style.display = "block";
+  saveVisibilityState();
+});
+
+$logoutBtn.addEventListener("click", () => {
+  localStorage.setItem("token", "");
+  window.location.href = "index.html";
+});
+
+$submitButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  const fullNameInput = document.getElementById("fullName").value.trim();
+  const deliveryPlaceInput = document
+    .getElementById("deliveryPlace")
+    .value.trim();
+  const deliveryDateInput = document.getElementById("deliveryDate").value;
+  const paymentMethodInput = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+  if (!validateFullName(fullNameInput)) {
+    alert("Please enter a Name and Surname in correct format");
+    return;
+  }
+
+  if (!deliveryPlaceInput) {
+    alert("Delivery Place is required.");
+    return;
+  }
+
+  const today = new Date();
+  const selectedDate = new Date(deliveryDateInput);
+  const minDate = new Date(today);
+  minDate.setDate(today.getDate() + 13);
+
+  if (selectedDate < minDate) {
+    alert("Delivery date must be at least 14 days from today.");
+    return;
+  }
+
+  if (!paymentMethodInput) {
+    alert("Please select a Payment Method.");
+    return;
+  }
+
+  const savedCar = localStorage.getItem("selectedCar");
+  const car = savedCar ? JSON.parse(savedCar) : null;
+  const selectedAccessories = Array.from(
+    document.querySelectorAll('input[name="accessories"]:checked')
+  ).map((checkbox) => checkbox.value);
+
+  // Retrieve total price from localStorage
+  const savedFormData = JSON.parse(localStorage.getItem("formData")) || {};
+  const totalPrice = savedFormData.totalPrice || "N/A";
+
+  $carsDiv.style.display = "none";
+  $formDiv.style.display = "none";
+  $confirmDiv.style.display = "block";
+
+  $confirmDiv.querySelector("div").innerHTML = `
+    <h2>Thank you!</h2>
+    <p>Your delivery has been confirmed.</p>
+    <p><strong>Car:</strong> ${car ? `${car.Brand} ${car.Model}` : "N/A"}</p>
+    <p><strong>Total Price:</strong> ${totalPrice} ${
+    car ? car.Currency || "" : ""
+  }</p>
+    <p><strong>Delivery Date:</strong> ${deliveryDateInput || "N/A"}</p>
+    <p><strong>Accessories:</strong> ${
+      selectedAccessories.length > 0 ? selectedAccessories.join(", ") : "None"
+    }</p>
+    <img src="${
+      car && car.Picture
+        ? `data:image/jpeg;base64,${car.Picture}`
+        : "https://via.placeholder.com/300x200?text=No+Image"
+    }" alt="${
+    car ? `${car.Brand} ${car.Model}` : "Car"
+  }" style="max-width: 300px; margin-top: 10px;" />
+  `;
+
+  $logoutBtn.style.display = "none";
+  localStorage.clear();
+});
