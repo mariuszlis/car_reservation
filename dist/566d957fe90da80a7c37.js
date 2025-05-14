@@ -65,6 +65,12 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _scss_global_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _scss_mainScreen_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
 
 if (localStorage.getItem("token") !== "123123") {
@@ -84,6 +90,7 @@ window.addEventListener("load", function () {
   loadVisibilityState();
   loadSelectedCar();
   loadFormData();
+  fetchAndDisplayCars($dropdown.value);
 });
 document.getElementById("fullName").addEventListener("input", saveFormData);
 document.getElementById("deliveryPlace").addEventListener("input", saveFormData);
@@ -127,9 +134,40 @@ function fetchAndDisplayCars(type) {
   }).then(function (data) {
     console.log("API Response:", data);
     $dataContainer.innerHTML = "";
+    populateBrandFilter(data);
     displayCars(data);
   })["catch"](function (error) {
     console.error("Error connecting to the API:", error);
+  });
+}
+document.getElementById("brandFilter").addEventListener("change", function (event) {
+  var selectedBrand = event.target.value;
+  fetch("https://db-api-0s2o.onrender.com/cars?type=".concat($dropdown.value), {
+    method: "GET",
+    mode: "cors"
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    var filteredCars = selectedBrand === "all" ? data : data.filter(function (car) {
+      return car.Brand === selectedBrand;
+    });
+    $dataContainer.innerHTML = "";
+    displayCars(filteredCars);
+  })["catch"](function (error) {
+    console.error("Error filtering cars:", error);
+  });
+});
+function populateBrandFilter(cars) {
+  var brandFilter = document.getElementById("brandFilter");
+  var uniqueBrands = _toConsumableArray(new Set(cars.map(function (car) {
+    return car.Brand;
+  })));
+  brandFilter.innerHTML = '<option value="all">All Brands</option>';
+  uniqueBrands.forEach(function (brand) {
+    var option = document.createElement("option");
+    option.value = brand;
+    option.textContent = brand;
+    brandFilter.appendChild(option);
   });
 }
 function displayCars(cars) {
@@ -241,7 +279,7 @@ function loadFormData() {
     if (totalPrice) {
       var $carPrice = document.getElementById("carPrice");
       if ($carPrice) {
-        $carPrice.textContent = "Total Price: ".concat(totalPrice);
+        $carPrice.textContent = "Total Price: ".concat(totalPrice, " PLN");
       }
     }
   }
@@ -257,10 +295,6 @@ function loadSelectedCar() {
 }
 $dropdown.addEventListener("change", function (event) {
   var selectedType = event.target.value;
-  if (selectedType === "X") {
-    $dataContainer.innerHTML = "";
-    return;
-  }
   fetchAndDisplayCars(selectedType);
 });
 $backButton.addEventListener("click", function () {

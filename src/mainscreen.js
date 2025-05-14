@@ -24,6 +24,7 @@ window.addEventListener("load", () => {
   loadVisibilityState();
   loadSelectedCar();
   loadFormData();
+  fetchAndDisplayCars($dropdown.value);
 });
 
 document.getElementById("fullName").addEventListener("input", saveFormData);
@@ -85,11 +86,47 @@ function fetchAndDisplayCars(type) {
     .then((data) => {
       console.log("API Response:", data);
       $dataContainer.innerHTML = "";
+
+      populateBrandFilter(data);
       displayCars(data);
     })
     .catch((error) => {
       console.error("Error connecting to the API:", error);
     });
+}
+
+document.getElementById("brandFilter").addEventListener("change", (event) => {
+  const selectedBrand = event.target.value;
+
+  fetch(`https://db-api-0s2o.onrender.com/cars?type=${$dropdown.value}`, {
+    method: "GET",
+    mode: "cors",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const filteredCars =
+        selectedBrand === "all"
+          ? data
+          : data.filter((car) => car.Brand === selectedBrand);
+      $dataContainer.innerHTML = "";
+      displayCars(filteredCars);
+    })
+    .catch((error) => {
+      console.error("Error filtering cars:", error);
+    });
+});
+
+function populateBrandFilter(cars) {
+  const brandFilter = document.getElementById("brandFilter");
+  const uniqueBrands = [...new Set(cars.map((car) => car.Brand))];
+
+  brandFilter.innerHTML = '<option value="all">All Brands</option>';
+  uniqueBrands.forEach((brand) => {
+    const option = document.createElement("option");
+    option.value = brand;
+    option.textContent = brand;
+    brandFilter.appendChild(option);
+  });
 }
 
 function displayCars(cars) {
@@ -261,7 +298,7 @@ function loadFormData() {
     if (totalPrice) {
       const $carPrice = document.getElementById("carPrice");
       if ($carPrice) {
-        $carPrice.textContent = `Total Price: ${totalPrice}`;
+        $carPrice.textContent = `Total Price: ${totalPrice} PLN`;
       }
     }
   }
@@ -282,12 +319,6 @@ function loadSelectedCar() {
 
 $dropdown.addEventListener("change", (event) => {
   const selectedType = event.target.value;
-
-  if (selectedType === "X") {
-    $dataContainer.innerHTML = "";
-    return;
-  }
-
   fetchAndDisplayCars(selectedType);
 });
 

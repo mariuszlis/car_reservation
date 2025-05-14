@@ -204,6 +204,20 @@ body {
   outline: none;
 }
 
+#brandFilter {
+  border-radius: 4px;
+  font-size: 20px;
+  cursor: pointer;
+  color: deepskyblue;
+  background-color: transparent;
+  border: none;
+  padding: 8px 16px;
+}
+
+#brandFilter:focus {
+  outline: none;
+}
+
 #choose {
   margin-left: 30px;
   font-size: 24px;
