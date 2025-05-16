@@ -61,22 +61,25 @@ body {
 }
 .mainScreen .dataContainer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  flex-direction: row;
   gap: 20px;
   padding: 20px;
+  justify-content: flex-start;
 }
 .mainScreen .carContainer {
+  flex: 1 1 45%;
+  max-width: 45%;
+  min-width: 280px;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 400px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
-  background-color: transparent;
-  box-shadow: 0 4px 8px;
+  margin-bottom: 0;
+  background: transparent;
 }
 .mainScreen .carImage {
   width: 150px;
