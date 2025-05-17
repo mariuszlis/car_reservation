@@ -55,13 +55,30 @@
 .dropdownContainer {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
 }
 
 .dropdownContainer p {
-  margin: 0;
-  font-size: 16px;
-  color: white;
+  margin-left: 20px;
+  font-size: 20px;
+  color: deepskyblue;
+}
+
+#carTypeDropdown,
+#brandFilter {
+  min-width: 120px;
+  border-radius: 4px;
+  font-size: 20px;
+  cursor: pointer;
+  color: deepskyblue;
+  background-color: transparent;
+  border: none;
+  padding: 8px 16px;
+}
+
+#carTypeDropdown:focus,
+#brandFilter:focus {
+  outline: none;
 }
 
 #form {
@@ -144,34 +161,6 @@
   margin-top: 20px;
 }
 
-#carTypeDropdown {
-  border-radius: 4px;
-  font-size: 20px;
-  cursor: pointer;
-  color: deepskyblue;
-  background-color: transparent;
-  border: none;
-  padding: 8px 16px;
-}
-
-#carTypeDropdown:focus {
-  outline: none;
-}
-
-#brandFilter {
-  border-radius: 4px;
-  font-size: 20px;
-  cursor: pointer;
-  color: deepskyblue;
-  background-color: transparent;
-  border: none;
-  padding: 8px 16px;
-}
-
-#brandFilter:focus {
-  outline: none;
-}
-
 #choose {
   margin-left: 30px;
   font-size: 24px;
@@ -203,4 +192,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     color: aliceblue;
   }
+}
+
+.hidden {
+  display: none !important;
 }

@@ -6,13 +6,13 @@
     <meta name="robots" content="noindex" />
     <meta name="googlebot" content="noindex" />
     <title>Main Screen</title>
-  <script defer src="566d957fe90da80a7c37.js"></script><link href="c0a6572ec98af9b58a00.css" rel="stylesheet"></head>
+  <script defer src="982b24f29a8c183d67db.js"></script><link href="041bc5360103061beb8a.css" rel="stylesheet"></head>
   <body>
     <section class="mainScreen">
       <button id="logout" class="btn">Logout</button>
       <div id="cars">
-        <p id="choose">
-          Choose your car type:
+        <div class="dropdownContainer">
+          <p>Choose your car type:</p>
           <select id="carTypeDropdown">
             <option value="P">Personal</option>
             <option value="T">Transit</option>
@@ -20,24 +20,15 @@
           <select id="brandFilter">
             <option value="all">All Brands</option>
           </select>
-        </p>
+        </div>
         <div class="dataContainer">
           <!-- Cars will be visible here -->
         </div>
       </div>
-      <div id="form" style="display: none">
-        <div id="selectedCarDetails" style="margin-bottom: 20px">
+      <div id="form" class="hidden">
+        <div id="selectedCarDetails">
           <!-- Selected car details and picture will be displayed here -->
-          <img
-            id="carImage"
-            alt="Selected Car"
-            style="
-              width: 100%;
-              max-width: 300px;
-              border-radius: 8px;
-              margin-bottom: 15px;
-            "
-          />
+          <img id="carImage" alt="Selected Car" />
         </div>
         <form id="deliveryForm">
           <label for="fullName">Full Name:</label>
@@ -87,7 +78,7 @@
           </div>
         </form>
       </div>
-      <div id="confirm" style="display: none">
+      <div id="confirm" class="hidden">
         <div></div>
       </div>
     </section>

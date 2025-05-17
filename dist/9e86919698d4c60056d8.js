@@ -68,7 +68,7 @@ __webpack_require__.r(__webpack_exports__);
 var $loginBtn = document.getElementById("login");
 var $password = document.getElementById("password");
 var $userName = document.getElementById("username");
-if (localStorage.getItem("token") === "123123") {
+if (localStorage.getItem("token")) {
   window.location.href = "mainscreen.html";
 }
 function handleEnter(e) {
@@ -80,9 +80,8 @@ function tryToLogin() {
   fetch("https://login-api-ussm.onrender.com/login", {
     method: "POST",
     mode: "cors",
-    // CORS set on API side
     headers: {
-      "Content-Type": "application/json" // Required with CORS mode to POST
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       name: $userName.value,
@@ -91,13 +90,15 @@ function tryToLogin() {
   }).then(function (response) {
     return response.json();
   }).then(function (response) {
-    console.log(response.message);
-    if (response.isLogged) {
-      localStorage.setItem("token", "123123");
+    if (response.isLogged && response.token) {
+      localStorage.setItem("token", response.token);
       window.location.href = "mainscreen.html";
     } else {
       alert("Login failed: Wrong username or password");
     }
+  })["catch"](function (error) {
+    alert("Login failed: Unable to connect to the server.");
+    console.error("Login error:", error);
   });
 }
 $userName.addEventListener("keydown", handleEnter);

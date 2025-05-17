@@ -1,7 +1,7 @@
 import global_style from "./scss/global.scss";
 import style from "./scss/mainScreen.scss";
 
-if (localStorage.getItem("token") !== "123123") {
+if (!localStorage.getItem("token")) {
   window.location.href = "index.html";
 }
 
@@ -19,6 +19,36 @@ const $submitButton = document.querySelector(
   '#deliveryForm button[type="submit"]'
 );
 const $mainScreen = document.querySelector(".mainScreen");
+
+function saveVisibilityState() {
+  localStorage.setItem("carsHidden", $carsDiv.classList.contains("hidden"));
+  localStorage.setItem("formHidden", $formDiv.classList.contains("hidden"));
+  localStorage.setItem(
+    "confirmHidden",
+    $confirmDiv.classList.contains("hidden")
+  );
+}
+
+function loadVisibilityState() {
+  if (localStorage.getItem("carsHidden") !== null) {
+    $carsDiv.classList.toggle(
+      "hidden",
+      localStorage.getItem("carsHidden") === "true"
+    );
+  }
+  if (localStorage.getItem("formHidden") !== null) {
+    $formDiv.classList.toggle(
+      "hidden",
+      localStorage.getItem("formHidden") === "true"
+    );
+  }
+  if (localStorage.getItem("confirmHidden") !== null) {
+    $confirmDiv.classList.toggle(
+      "hidden",
+      localStorage.getItem("confirmHidden") === "true"
+    );
+  }
+}
 
 window.addEventListener("load", () => {
   loadVisibilityState();
@@ -56,22 +86,6 @@ accessoryCheckboxes.forEach((checkbox) => {
   });
 });
 
-function saveVisibilityState() {
-  const formState = $formDiv.style.display || "none";
-  const carsState = $carsDiv.style.display || "block";
-
-  localStorage.setItem("formState", formState);
-  localStorage.setItem("carsState", carsState);
-}
-
-function loadVisibilityState() {
-  const formState = localStorage.getItem("formState") || "none";
-  const carsState = localStorage.getItem("carsState") || "block";
-
-  $formDiv.style.display = formState;
-  $carsDiv.style.display = carsState;
-}
-
 function fetchAndDisplayCars(type) {
   fetch(`https://db-api-0s2o.onrender.com/cars?type=${type}`, {
     method: "GET",
@@ -84,7 +98,6 @@ function fetchAndDisplayCars(type) {
       return response.json();
     })
     .then((data) => {
-      console.log("API Response:", data);
       $dataContainer.innerHTML = "";
 
       populateBrandFilter(data);
@@ -166,10 +179,6 @@ function selectCar(car) {
   );
   if (isConfirmed) {
     localStorage.setItem("selectedCar", JSON.stringify(car));
-
-    $carsDiv.style.display = "none";
-    $formDiv.style.display = "block";
-    saveVisibilityState();
     setDefaultDeliveryDate();
     saveFormData();
 
@@ -179,9 +188,10 @@ function selectCar(car) {
       <p id="carPrice">Total Price: ${basePrice} ${car.Currency}</p>
     `;
 
-    console.log("Car selected:", car);
-  } else {
-    console.log("Car selection canceled.");
+    $carsDiv.classList.add("hidden");
+    $formDiv.classList.remove("hidden");
+    $confirmDiv.classList.add("hidden");
+    saveVisibilityState();
   }
 }
 
@@ -226,7 +236,8 @@ function updatePrice(basePrice, currency) {
 }
 
 function validateFullName(fullName) {
-  const fullNameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
+  const fullNameRegex =
+    /^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+[\s-][A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+$/u;
   return fullNameRegex.test(fullName);
 }
 
@@ -298,7 +309,10 @@ function loadFormData() {
     if (totalPrice) {
       const $carPrice = document.getElementById("carPrice");
       if ($carPrice) {
-        $carPrice.textContent = `Total Price: ${totalPrice} PLN`;
+        const savedCar = localStorage.getItem("selectedCar");
+        const car = savedCar ? JSON.parse(savedCar) : null;
+        const currency = car ? car.Currency || "" : "PLN";
+        $carPrice.textContent = `Total Price: ${totalPrice} ${currency}`;
       }
     }
   }
@@ -313,7 +327,6 @@ function loadSelectedCar() {
       <p><strong>${car.Brand} ${car.Model} ${car.Year}</strong></p>
       <p id="carPrice">Total Price: ${basePrice} ${car.Currency || ""}</p>
     `;
-    console.log("Loaded selected car:", car);
   }
 }
 
@@ -340,8 +353,9 @@ $backButton.addEventListener("click", () => {
 
   localStorage.removeItem("formData");
 
-  $formDiv.style.display = "none";
-  $carsDiv.style.display = "block";
+  $carsDiv.classList.remove("hidden");
+  $formDiv.classList.add("hidden");
+  $confirmDiv.classList.add("hidden");
   saveVisibilityState();
 });
 
@@ -393,13 +407,12 @@ $submitButton.addEventListener("click", (event) => {
     document.querySelectorAll('input[name="accessories"]:checked')
   ).map((checkbox) => checkbox.value);
 
-  // Retrieve total price from localStorage
   const savedFormData = JSON.parse(localStorage.getItem("formData")) || {};
   const totalPrice = savedFormData.totalPrice || "N/A";
 
-  $carsDiv.style.display = "none";
-  $formDiv.style.display = "none";
-  $confirmDiv.style.display = "block";
+  $formDiv.classList.add("hidden");
+  $confirmDiv.classList.remove("hidden");
+  $carsDiv.classList.add("hidden");
 
   $confirmDiv.querySelector("div").innerHTML = `
     <h2>Thank you!</h2>

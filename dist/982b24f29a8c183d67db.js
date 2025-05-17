@@ -73,7 +73,7 @@ function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
 
-if (localStorage.getItem("token") !== "123123") {
+if (!localStorage.getItem("token")) {
   window.location.href = "index.html";
 }
 var $logoutBtn = document.getElementById("logout");
@@ -86,6 +86,22 @@ var $selectedCarDetails = document.getElementById("selectedCarDetails");
 var $backButton = document.querySelector('#deliveryForm button[type="button"]');
 var $submitButton = document.querySelector('#deliveryForm button[type="submit"]');
 var $mainScreen = document.querySelector(".mainScreen");
+function saveVisibilityState() {
+  localStorage.setItem("carsHidden", $carsDiv.classList.contains("hidden"));
+  localStorage.setItem("formHidden", $formDiv.classList.contains("hidden"));
+  localStorage.setItem("confirmHidden", $confirmDiv.classList.contains("hidden"));
+}
+function loadVisibilityState() {
+  if (localStorage.getItem("carsHidden") !== null) {
+    $carsDiv.classList.toggle("hidden", localStorage.getItem("carsHidden") === "true");
+  }
+  if (localStorage.getItem("formHidden") !== null) {
+    $formDiv.classList.toggle("hidden", localStorage.getItem("formHidden") === "true");
+  }
+  if (localStorage.getItem("confirmHidden") !== null) {
+    $confirmDiv.classList.toggle("hidden", localStorage.getItem("confirmHidden") === "true");
+  }
+}
 window.addEventListener("load", function () {
   loadVisibilityState();
   loadSelectedCar();
@@ -110,18 +126,6 @@ accessoryCheckboxes.forEach(function (checkbox) {
     saveFormData();
   });
 });
-function saveVisibilityState() {
-  var formState = $formDiv.style.display || "none";
-  var carsState = $carsDiv.style.display || "block";
-  localStorage.setItem("formState", formState);
-  localStorage.setItem("carsState", carsState);
-}
-function loadVisibilityState() {
-  var formState = localStorage.getItem("formState") || "none";
-  var carsState = localStorage.getItem("carsState") || "block";
-  $formDiv.style.display = formState;
-  $carsDiv.style.display = carsState;
-}
 function fetchAndDisplayCars(type) {
   fetch("https://db-api-0s2o.onrender.com/cars?type=".concat(type), {
     method: "GET",
@@ -132,7 +136,6 @@ function fetchAndDisplayCars(type) {
     }
     return response.json();
   }).then(function (data) {
-    console.log("API Response:", data);
     $dataContainer.innerHTML = "";
     populateBrandFilter(data);
     displayCars(data);
@@ -186,16 +189,14 @@ function selectCar(car) {
   var isConfirmed = confirm("Please approve Your choice: ".concat(car.Brand, " ").concat(car.Model, "?"));
   if (isConfirmed) {
     localStorage.setItem("selectedCar", JSON.stringify(car));
-    $carsDiv.style.display = "none";
-    $formDiv.style.display = "block";
-    saveVisibilityState();
     setDefaultDeliveryDate();
     saveFormData();
     var basePrice = car.Price || 0;
     $selectedCarDetails.innerHTML = "\n      <p><strong>".concat(car.Brand, " ").concat(car.Model, " ").concat(car.Year, "</strong></p>\n      <p id=\"carPrice\">Total Price: ").concat(basePrice, " ").concat(car.Currency, "</p>\n    ");
-    console.log("Car selected:", car);
-  } else {
-    console.log("Car selection canceled.");
+    $carsDiv.classList.add("hidden");
+    $formDiv.classList.remove("hidden");
+    $confirmDiv.classList.add("hidden");
+    saveVisibilityState();
   }
 }
 function setDefaultDeliveryDate() {
@@ -228,7 +229,7 @@ function updatePrice(basePrice, currency) {
   localStorage.setItem("formData", JSON.stringify(savedFormData));
 }
 function validateFullName(fullName) {
-  var fullNameRegex = /^[A-Za-z]+\s[A-Za-z]+$/;
+  var fullNameRegex = /^[A-Za-z\xD3\xF3\u0104-\u0107\u0118\u0119\u0141-\u0144\u015A\u015B\u0179-\u017C]+[\t-\r \x2D\xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF][A-Za-z\xD3\xF3\u0104-\u0107\u0118\u0119\u0141-\u0144\u015A\u015B\u0179-\u017C]+$/;
   return fullNameRegex.test(fullName);
 }
 function saveFormData() {
@@ -279,7 +280,10 @@ function loadFormData() {
     if (totalPrice) {
       var $carPrice = document.getElementById("carPrice");
       if ($carPrice) {
-        $carPrice.textContent = "Total Price: ".concat(totalPrice, " PLN");
+        var savedCar = localStorage.getItem("selectedCar");
+        var car = savedCar ? JSON.parse(savedCar) : null;
+        var currency = car ? car.Currency || "" : "PLN";
+        $carPrice.textContent = "Total Price: ".concat(totalPrice, " ").concat(currency);
       }
     }
   }
@@ -290,7 +294,6 @@ function loadSelectedCar() {
     var car = JSON.parse(savedCar);
     var basePrice = car.Price || 0;
     $selectedCarDetails.innerHTML = "\n      <p><strong>".concat(car.Brand, " ").concat(car.Model, " ").concat(car.Year, "</strong></p>\n      <p id=\"carPrice\">Total Price: ").concat(basePrice, " ").concat(car.Currency || "", "</p>\n    ");
-    console.log("Loaded selected car:", car);
   }
 }
 $dropdown.addEventListener("change", function (event) {
@@ -309,8 +312,9 @@ $backButton.addEventListener("click", function () {
     checkbox.checked = false;
   });
   localStorage.removeItem("formData");
-  $formDiv.style.display = "none";
-  $carsDiv.style.display = "block";
+  $carsDiv.classList.remove("hidden");
+  $formDiv.classList.add("hidden");
+  $confirmDiv.classList.add("hidden");
   saveVisibilityState();
 });
 $logoutBtn.addEventListener("click", function () {
@@ -348,13 +352,11 @@ $submitButton.addEventListener("click", function (event) {
   var selectedAccessories = Array.from(document.querySelectorAll('input[name="accessories"]:checked')).map(function (checkbox) {
     return checkbox.value;
   });
-
-  // Retrieve total price from localStorage
   var savedFormData = JSON.parse(localStorage.getItem("formData")) || {};
   var totalPrice = savedFormData.totalPrice || "N/A";
-  $carsDiv.style.display = "none";
-  $formDiv.style.display = "none";
-  $confirmDiv.style.display = "block";
+  $formDiv.classList.add("hidden");
+  $confirmDiv.classList.remove("hidden");
+  $carsDiv.classList.add("hidden");
   $confirmDiv.querySelector("div").innerHTML = "\n    <h2>Thank you!</h2>\n    <p>Your delivery has been confirmed.</p>\n    <p><strong>Car:</strong> ".concat(car ? "".concat(car.Brand, " ").concat(car.Model) : "N/A", "</p>\n    <p><strong>Total Price:</strong> ").concat(totalPrice, " ").concat(car ? car.Currency || "" : "", "</p>\n    <p><strong>Delivery Date:</strong> ").concat(deliveryDateInput || "N/A", "</p>\n    <p><strong>Accessories:</strong> ").concat(selectedAccessories.length > 0 ? selectedAccessories.join(", ") : "None", "</p>\n    <img src=\"").concat(car && car.Picture ? "data:image/jpeg;base64,".concat(car.Picture) : "https://via.placeholder.com/300x200?text=No+Image", "\" alt=\"").concat(car ? "".concat(car.Brand, " ").concat(car.Model) : "Car", "\" style=\"max-width: 300px; margin-top: 10px;\" />\n  ");
   $logoutBtn.style.display = "none";
   localStorage.clear();
